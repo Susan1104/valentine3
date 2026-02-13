@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Valentine Special</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Bradley Hand ITC;
+    text-align:center;
+    color:white;
+    background:linear-gradient(to right,#ff758c,#ff7eb3);
+    overflow:hidden;
+    position:relative;
+}
+
+/* start screen */
+#startScreen{
+    position:absolute;
+    width:100%;
+    top:40%;
+    z-index:2;
+}
+.startBtn{
+    padding:15px 40px;
+    font-size:22px;
+    border:none;
+    border-radius:30px;
+    background:white;
+    color:#ff4d6d;
+}
+
+/* typing text */
+#typing{
+    font-size:36px;
+    margin-top:20px;
+    display:none;
+}
+
+/* slides */
+.slide{
+    display:none;
+    padding-top:100px;
+    font-size:26px;
+    width:80%;
+    margin:auto;
+    position:relative;
+    z-index:2;
+}
+.active{display:block;}
+
+.photo{
+    width:280px;
+    border-radius:20px;
+    margin-top:20px;
+}
+
+/* heart burst */
+.burst{
+    position:fixed;
+    font-size:25px;
+    animation:burst 1s linear forwards;
+    z-index:3;
+}
+@keyframes burst{
+    to{transform:translateY(-200px);opacity:0;}
+}
+
+/* yes button glow */
+.yesBtn{
+    padding:15px 40px;
+    font-size:24px;
+    border:none;
+    border-radius:30px;
+    background:white;
+    color:#ff4d6d;
+    animation:glow 1.5s infinite alternate;
+    z-index:2;
+}
+@keyframes glow{
+    from{box-shadow:0 0 10px white;}
+    to{box-shadow:0 0 30px white;}
+}
+
+/* sparkle */
+.sparkle{
+    position:fixed;
+    width:5px;
+    height:5px;
+    background:white;
+    border-radius:50%;
+    animation:spark 1s linear forwards;
+    z-index:3;
+}
+@keyframes spark{
+    to{transform:translateY(-100px);opacity:0;}
+}
+
+/* floating hearts */
+.floatingHeart{
+    position:fixed;
+    font-size:20px;
+    color:white;
+    opacity:0.8;
+    animation:floatHeart linear forwards;
+    z-index:1;
+}
+@keyframes floatHeart{
+    0%{
+        transform:translateY(100vh) scale(0.5);
+        opacity:0;
+    }
+    20%{opacity:1;}
+    100%{
+        transform:translateY(-50px) scale(1);
+        opacity:0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div id="startScreen">
+    <h1>Valentine Surprise ❤️</h1>
+    <button class="startBtn" onclick="openHeart()">💖 Open My Heart</button>
+    <div id="typing"></div>
+</div>
+
+<audio id="music" loop>
+    <source src="music1.mp3" type="audio/mpeg">
+</audio>
+
+<div id="slidesArea" style="display:none">
+
+<!-- Valentine Week Slides -->
+<div class="slide active">🌹 Rose Day – You are the most beautiful part of my life.</div>
+<div class="slide">💍 Propose Day – I would still choose you again and again.</div>
+<div class="slide">🍫 Chocolate Day – You make my life sweeter every day.</div>
+<div class="slide">🧸 Teddy Day – Sending you a hug in the form of this cute teddy!</div>
+<div class="slide">🤝 Promise Day – I promise to always stand by you.</div>
+<div class="slide">🤗 Hug Day – Imagine a warm hug coming your way! 💖</div>
+<div class="slide">💋 Kiss Day – A kiss for every smile you bring to my life.</div>
+<div class="slide">❤️ Valentine’s Day – You are my forever Valentine 💕</div>
+
+<!-- Special Moments -->
+<div class="slide">
+    <h2>❤️ Our Special Moment</h2>
+    <img src="c2.jpeg" class="photo">
+    <p>Happy Valentine’s Day 💕 Every moment with you is my favorite memory.</p>
+</div>
+
+<!-- Proposal Slide -->
+<div class="slide" id="proposalSlide">
+    <h1>Will you stay with me forever? ❤️</h1>
+    <button class="yesBtn" onclick="showLove()">YES 💖</button>
+    <h2 id="loveText" style="display:none;">I Love You Forever ✨</h2>
+</div>
+
+<!-- Baby Finale Slide -->
+<div class="slide" id="babySlide">
+    <h2>💌 From Your Baby, With Love 💖</h2>
+    <img src="c7.jpeg" class="photo">
+    <p>Every moment with you makes my heart smile 😊❤️</p>
+</div>
+
+</div>
+
+<script>
+let slides = document.querySelectorAll(".slide");
+let index = 0;
+let sparkleInterval;
+
+// Generate floating hearts continuously
+function createFloatingHearts(){
+    setInterval(()=>{
+        let heart = document.createElement("div");
+        heart.className = "floatingHeart";
+        heart.innerHTML = "❤️";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.fontSize = (10 + Math.random()*20) + "px";
+        heart.style.animationDuration = (5 + Math.random()*5) + "s";
+        document.body.appendChild(heart);
+        setTimeout(()=>heart.remove(), 10000); // remove after animation
+    }, 500); // new heart every 0.5s
+}
+
+// Heart burst effect and typing message
+function openHeart(){
+    // Heart burst
+    for(let i=0;i<30;i++){
+        let h=document.createElement("div");
+        h.innerHTML="❤️";
+        h.className="burst";
+        h.style.left=Math.random()*100+"%";
+        h.style.bottom="0";
+        document.body.appendChild(h);
+        setTimeout(()=>h.remove(),1000);
+    }
+
+    // Typing message
+    let text="For You...";
+    let i=0;
+    let typing=document.getElementById("typing");
+    typing.style.display="block";
+
+    let t=setInterval(()=>{
+        typing.innerHTML += text[i];
+        i++;
+        if(i==text.length){
+            clearInterval(t);
+            setTimeout(startSlides,1500);
+        }
+    },150);
+}
+
+// Start slides with 4-second interval
+function startSlides(){
+    document.getElementById("startScreen").style.display = "none";
+    document.getElementById("slidesArea").style.display = "block";
+    document.getElementById("music").play();
+
+    createFloatingHearts(); // start floating hearts
+
+    setInterval(() => {
+        // Remove current slide
+        slides[index].classList.remove("active");
+
+        // Stop sparkle if leaving proposal or baby slide
+        if(slides[index].id === "proposalSlide" || slides[index].id === "babySlide"){
+            stopSparkles();
+        }
+
+        // Move to next slide
+        index = (index + 1) % slides.length;
+
+        // Show next slide
+        slides[index].classList.add("active");
+
+        // Start sparkle if entering proposal or baby slide
+        if(slides[index].id === "proposalSlide" || slides[index].id === "babySlide"){
+            startSparkles();
+        }
+    }, 4000);
+}
+
+// Show love text and sparkles on proposal
+function showLove(){
+    document.getElementById("loveText").style.display="block";
+    startSparkles();
+}
+
+// Sparkle effect
+function startSparkles(){
+    stopSparkles(); // clear previous interval
+    sparkleInterval = setInterval(()=>{
+        let s = document.createElement("div");
+        s.className = "sparkle";
+        s.style.left = Math.random()*100+"%";
+        s.style.bottom = "0";
+        document.body.appendChild(s);
+        setTimeout(()=>s.remove(),1000);
+    }, 100);
+}
+
+function stopSparkles(){
+    if(sparkleInterval) clearInterval(sparkleInterval);
+}
+</script>
+
+</body>
+</html>
